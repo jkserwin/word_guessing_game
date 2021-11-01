@@ -44,10 +44,11 @@ function addPhraseToDisplay(arr) {
 
 function checkLetter(clicked) {
     const letters = document.querySelectorAll('.letter')
+    let match = null;
     for (let i = 0; i < letters.length; i ++) {
         if (clicked.textContent === letters[i].textContent.toLowerCase()) {
             letters[i].classList.add('show');
-            match += letters[i].textContent;
+            match = letters[i].textContent;
         }
     }
     return match;
@@ -67,14 +68,17 @@ function changeHeart() {
 }
 
 function checkWin() {
-    let letters = document.querySelectorAll('.letter')
-    let shownLetters = document.querySelectorAll('.show')
+    let letters = document.querySelectorAll('.letter');
+    let shownLetters = document.querySelectorAll('.show');
+    let headline = document.querySelector('.title');
     if (letters.length === shownLetters.length) {
         overlay.style.display = 'flex';
         overlay.className = 'win';
+        headline.innerText = `Congratulations, you won!`;
     } else if (missed > 4) {
         overlay.style.display = 'flex';
         overlay.className = 'lose';
+        headline.innerText = `Sorry, you lost!`;
     }
 }
 
@@ -82,8 +86,9 @@ qwerty.addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON' && e.target.className !== 'chosen') { 
         e.target.classList.add('chosen');
         let letterFound = checkLetter(e.target);
-        if (letterFound.innerText === 'null') {
+        if (letterFound === null) {
             missed += 1;
+            console.log(missed);
             changeHeart();
         }
     }
