@@ -5,21 +5,30 @@ const ul = document.querySelector('#phrase ul')
 let missed = 0;
 let match = null;
 
+// starts the game on click
+
 const reset = document.querySelector('.btn__reset');
 reset.addEventListener('click', (e) => {
-    ul.innerHTML = ``;
-    phraseArray.innerHTML = ``;
     overlay.style.display = 'none';
     addPhraseToDisplay(phraseArray);
 });
+
+// holds phrases to be guessed
 
 let phrases = [
     'Sylvester Stallone',
     'Talia Shire',
     'Burt Young',
     'Carl Weathers',
-    'Burgess Meredith'
+    'Burgess Meredith',
+    'Tony Burton',
+    'Dolph Lundgren',
+    'Brigitte Nielsen'
 ]
+
+// randomly selects phrase and converts it to array of letters and spaces
+
+const phraseArray = getRandomPhraseAsArray(phrases)
 
 function getRandomPhraseAsArray(arr) {
     let randomNum = Math.floor(Math.random() * arr.length);
@@ -27,7 +36,7 @@ function getRandomPhraseAsArray(arr) {
     return phrase.split('');
 }
 
-const phraseArray = getRandomPhraseAsArray(phrases)
+// converts phrase array to list of li nodes and displays it on the page
 
 function addPhraseToDisplay(arr) {
     for (let i = 0; i < arr.length; i++) {
@@ -42,6 +51,8 @@ function addPhraseToDisplay(arr) {
     }
 }
 
+// checks if letter clicked matches any of the letters in the phrase
+
 function checkLetter(clicked) {
     const letters = document.querySelectorAll('.letter')
     let match = null;
@@ -54,18 +65,14 @@ function checkLetter(clicked) {
     return match;
 }
 
-function createLostHeart() {
-    let lostHeart = document.createElement('li');
-    lostHeart.className = 'tries';
-    lostHeart.innerHTML = `<img src="images/lostHeart.png" height="35px" width="30px">`
-    return lostHeart;
-}
+// replaces the full heart image with a lost heart when player clicks a letter not in the phrase
 
 function changeHeart() {
-    let hearts = document.querySelector('#scoreboard ol');
-    hearts.removeChild(hearts.children[4]);
-    hearts.insertBefore(createLostHeart(), hearts.children[0])
+    let hearts = document.querySelectorAll('#scoreboard li');
+    hearts[missed - 1].innerHTML = `<img src="images/lostHeart.png" height="35px" width="30px">`
 }
+
+// checks if player has won or run out of lives and displays the corresponding overlay
 
 function checkWin() {
     let letters = document.querySelectorAll('.letter');
@@ -81,6 +88,8 @@ function checkWin() {
         headline.innerText = `Sorry, you lost!`;
     }
 }
+
+// listens for player click
 
 qwerty.addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON' && e.target.className !== 'chosen') { 
